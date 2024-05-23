@@ -11,7 +11,7 @@ public class FakeStoreDTO {
     private String title;
     private Double price;
     private String description;
-    private String imageURL;
+    private String image; // this is going to fake store hence keep this as image but not imageURL
     private String category;
 
 
@@ -21,7 +21,7 @@ public class FakeStoreDTO {
         productResponseDTO.setTitle(title);
         productResponseDTO.setPrice(price);
         productResponseDTO.setDescription(description);
-        productResponseDTO.setImageURL(imageURL);
+        productResponseDTO.setImageURL(image);
         productResponseDTO.setCategory(category);
 
         return productResponseDTO;
