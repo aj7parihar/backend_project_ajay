@@ -68,15 +68,15 @@ public class FakeStoreProductService implements ProductService {
             String imageURL,
             String category)
     {
-        FakeStoreDTO fakeStoreDTO = new FakeStoreDTO();
-        fakeStoreDTO.setTitle(title);
-        fakeStoreDTO.setPrice(price);
-        fakeStoreDTO.setDescription(description);
-        fakeStoreDTO.setImage(imageURL);
-        fakeStoreDTO.setCategory(category);
+        FakeStoreDTO requestDTO = new FakeStoreDTO();
+        requestDTO.setTitle(title);
+        requestDTO.setPrice(price);
+        requestDTO.setDescription(description);
+        requestDTO.setImage(imageURL);
+        requestDTO.setCategory(category);
 
         FakeStoreDTO response = restTemplate.postForObject("https://fakestoreapi.com/products",
-                fakeStoreDTO, FakeStoreDTO.class);
+                requestDTO, FakeStoreDTO.class);
         // fakeStoreDTO passed in params is request body
         // response from fake store api is sent to FakeStoreDTO.class
 
