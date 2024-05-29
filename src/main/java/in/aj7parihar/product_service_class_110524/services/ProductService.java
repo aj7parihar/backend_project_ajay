@@ -1,14 +1,17 @@
 package in.aj7parihar.product_service_class_110524.services;
 
-import in.aj7parihar.product_service_class_110524.dtos.ProductResponseDTO;
+import in.aj7parihar.product_service_class_110524.exceptions.ProductNotFoundException;
+import in.aj7parihar.product_service_class_110524.models.Product;
+
+import java.util.List;
 
 //@Service
 public interface ProductService {
-    public ProductResponseDTO getSingleProduct(int productId);
+    public Product getSingleProduct(int productId) throws ProductNotFoundException;
 
-    public ProductResponseDTO getAllProducts();
+    public List<Product> getAllProducts();
 
-    public ProductResponseDTO addProduct(
+    public Product addProduct(
             String title,
             Double price,
             String description,

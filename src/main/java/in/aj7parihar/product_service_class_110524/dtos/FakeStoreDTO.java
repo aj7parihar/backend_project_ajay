@@ -1,5 +1,7 @@
 package in.aj7parihar.product_service_class_110524.dtos;
 
+import in.aj7parihar.product_service_class_110524.models.Category;
+import in.aj7parihar.product_service_class_110524.models.Product;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,15 +17,19 @@ public class FakeStoreDTO {
     private String category;
 
 
-    public ProductResponseDTO toProductResponseDTO(){
-        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-        productResponseDTO.setId(id);
-        productResponseDTO.setTitle(title);
-        productResponseDTO.setPrice(price);
-        productResponseDTO.setDescription(description);
-        productResponseDTO.setImageURL(image);
-        productResponseDTO.setCategory(category);
+    public Product toProduct(){
+        // converting DTO from Fake Store side to Product object.
+        Product product = new Product();
+        product.setId(id);
+        product.setTitle(title);
+        product.setPrice(price);
+        product.setDescription(description);
+        product.setImageURL(image);
 
-        return productResponseDTO;
+        Category categoryObj = new Category();
+        categoryObj.setTitle(category);
+        product.setCategory(categoryObj);
+
+        return product;
     }
 }
