@@ -31,6 +31,18 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductResponseDTO> getProductDetails(@PathVariable ("id") int productId) throws ProductNotFoundException {
         Product product = productService.getSingleProduct(productId);
+        // Here ProductService is an Interface (or contract), now the reference to the object...
+        // "productService" of type ProductService will directly call the methods belonging to different
+        // Product Services like FakeStoreProductService, our own Product Service, etc.
+        // Hence FakeStoreProductService or OurOwnProductService will implement this contract/interface (ProductService)
+        // and THIS MY DEAR FRIEND IS THE BEAUTY OF INHERITANCE & INTERFACE.
+
+        // Just like Animal class can act as an Interface, and Cats & Dogs class will implement this interface
+
+        // Note - Interface and Abstract class fulfills the same purpose except Interface will not have its own
+        // attributes (will only have features i.e. functions/methods),
+        // whereas Abstract class will have its own attributes ( ie variables).
+
         // return convertProductToProductResponseDTO(product);
         ProductResponseDTO productResponseDTO = convertProductToProductResponseDTO(product);
         return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
