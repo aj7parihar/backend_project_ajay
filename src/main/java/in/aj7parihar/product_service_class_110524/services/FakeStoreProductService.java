@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("fakeStoreProductService")
 public class FakeStoreProductService implements ProductService {
 
     private RestTemplate restTemplate; // RestTemplate is a class provided by Spring Web
@@ -22,7 +22,7 @@ public class FakeStoreProductService implements ProductService {
     }
 
     @Override
-    public Product getSingleProduct(int productId) throws ProductNotFoundException {
+    public Product getSingleProduct(Long productId) throws ProductNotFoundException {
         FakeStoreDTO fakeStoreDTO = restTemplate.getForObject("https://fakestoreapi.com/products/"
         + productId, FakeStoreDTO.class);
 
@@ -81,5 +81,22 @@ public class FakeStoreProductService implements ProductService {
         // response from fake store api is sent to FakeStoreDTO.class
 
         return response.toProduct();
+    }
+    public Product deleteProduct(Long productId) throws ProductNotFoundException{
+        return null;
+    }
+
+    public Product updateProduct(Long productId,
+                          String title,
+                          Double price,
+                          String description,
+                          String imageURL,
+                          String category) throws ProductNotFoundException{
+        return null;
+    }
+
+    @Override
+    public Product replaceProduct(Long productId, String title, Double price, String description, String imageURL, String category) throws ProductNotFoundException {
+        return null;
     }
 }

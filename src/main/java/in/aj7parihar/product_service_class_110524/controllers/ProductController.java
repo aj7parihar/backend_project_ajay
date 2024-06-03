@@ -6,6 +6,7 @@ import in.aj7parihar.product_service_class_110524.exceptions.ProductNotFoundExce
 import in.aj7parihar.product_service_class_110524.models.Product;
 import in.aj7parihar.product_service_class_110524.services.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class ProductController {
     private ProductService productService;
     private ModelMapper modelMapper;
 
-    public ProductController(ProductService productService, ModelMapper modelMapper) {
+    public ProductController(@Qualifier("selfProductService") ProductService productService, ModelMapper modelMapper) {
         // Spring is doing the DI by default once I have made "@" annotation in FakeStoreProductService class
         this.productService = productService;
         this.modelMapper = modelMapper;
@@ -29,7 +30,7 @@ public class ProductController {
 
     // Get single Product by ID
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductResponseDTO> getProductDetails(@PathVariable ("id") int productId) throws ProductNotFoundException {
+    public ResponseEntity<ProductResponseDTO> getProductDetails(@PathVariable ("id") Long productId) throws ProductNotFoundException {
         Product product = productService.getSingleProduct(productId);
         // Here ProductService is an Interface (or contract), now the reference to the object...
         // "productService" of type ProductService will directly call the methods belonging to different
@@ -76,6 +77,44 @@ public class ProductController {
         // return convertProductToProductResponseDTO(product);
         ProductResponseDTO productResponseDTO = convertProductToProductResponseDTO(product);
         return new ResponseEntity<>(productResponseDTO, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<ProductResponseDTO> deleteAProduct(@PathVariable ("id") Long productId) throws ProductNotFoundException {
+        Product product = productService.deleteProduct(productId);
+        ProductResponseDTO productResponseDTO = convertProductToProductResponseDTO(product);
+        return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
+    }
+
+    @PatchMapping("/products/{id}")
+    public ResponseEntity<ProductResponseDTO> updateAProduct(@PathVariable ("id") Long productId,
+            @RequestBody ProductRequestDTO productRequestDTO) throws ProductNotFoundException {
+        Product product = productService.updateProduct(
+                productId,
+                productRequestDTO.getTitle(),
+                productRequestDTO.getPrice(),
+                productRequestDTO.getDescription(),
+                productRequestDTO.getImageURL(),
+                productRequestDTO.getCategory()
+        );
+        ProductResponseDTO productResponseDTO = convertProductToProductResponseDTO(product);
+        return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<ProductResponseDTO> replaceAProduct(@PathVariable ("id") Long productId,
+                                                             @RequestBody ProductRequestDTO productRequestDTO)
+            throws ProductNotFoundException {
+        Product product = productService.replaceProduct(
+                productId,
+                productRequestDTO.getTitle(),
+                productRequestDTO.getPrice(),
+                productRequestDTO.getDescription(),
+                productRequestDTO.getImageURL(),
+                productRequestDTO.getCategory()
+        );
+        ProductResponseDTO productResponseDTO = convertProductToProductResponseDTO(product);
+        return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
     }
 
     private ProductResponseDTO convertProductToProductResponseDTO(Product product){

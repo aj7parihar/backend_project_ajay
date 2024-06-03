@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class FakeStoreDTO {
 
-    private int id;
+    private long id;
     private String title;
     private Double price;
     private String description;

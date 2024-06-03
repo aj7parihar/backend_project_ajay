@@ -1,6 +1,7 @@
 package in.aj7parihar.product_service_class_110524.advices;
 
 import in.aj7parihar.product_service_class_110524.dtos.ErrorDTO;
+import in.aj7parihar.product_service_class_110524.exceptions.CategoryNotFoundException;
 import in.aj7parihar.product_service_class_110524.exceptions.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,20 @@ public class ControllerAdvice {
     // If it wants means, it will only handle the exception but not the normal/happy response codes.
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleProductNotFoundException(ProductNotFoundException productNotFoundException){
+    public ResponseEntity<ErrorDTO> handleProductNotFoundException
+            (ProductNotFoundException productNotFoundException){
         // ResponseEntity is used for HTTP response code, and it is provided by Spring Web
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setMessage(productNotFoundException.getMessage());
+        return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleCategoryNotFoundException
+            (CategoryNotFoundException categoryNotFoundException){
+        // ResponseEntity is used for HTTP response code, and it is provided by Spring Web
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setMessage(categoryNotFoundException.getMessage());
         return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
