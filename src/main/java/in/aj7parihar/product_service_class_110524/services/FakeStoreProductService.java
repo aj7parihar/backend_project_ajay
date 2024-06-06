@@ -80,6 +80,8 @@ public class FakeStoreProductService implements ProductService {
         // fakeStoreDTO passed in params is request body
         // response from fake store api is sent to FakeStoreDTO.class
 
+        // and then converted back to Product object
+
         return response.toProduct();
     }
     public Product deleteProduct(Long productId) throws ProductNotFoundException{

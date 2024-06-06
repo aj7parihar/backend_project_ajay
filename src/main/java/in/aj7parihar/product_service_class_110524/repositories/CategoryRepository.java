@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     // same explanation as mentioned in ProductRepository Interface
 
+    // Through Hibernate(ORM) below methods will execute JPA Declared Queries
+
     public Category save(Category category);
 
     public Category findByTitle(String title);
