@@ -4,6 +4,7 @@ import in.aj7parihar.product_service_class_110524.models.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     // same explanation as mentioned in ProductRepository Interface
@@ -19,4 +20,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     public ArrayList<Category> findAll();
 
     // public Category delete(Long categoryId); --> this gives fatal error on using it
+
+    //public Optional<Category> findById(Long categoryId);
+
+    public List<Category> findByTitleEndingWith(String ending);
 }
