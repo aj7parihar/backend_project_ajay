@@ -32,4 +32,17 @@ public class FakeStoreDTO {
 
         return product;
     }
+
+//    public ProductResponseDTO toProductResponseDTO(){
+//        // converting DTO from Fake Store side to Product object.
+//        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+//        productResponseDTO.setId(id);
+//        productResponseDTO.setTitle(title);
+//        productResponseDTO.setPrice(price);
+//        productResponseDTO.setDescription(description);
+//        productResponseDTO.setImageURL(image);
+//        productResponseDTO.setCategory(category);
+//
+//        return productResponseDTO;
+//    }
 }

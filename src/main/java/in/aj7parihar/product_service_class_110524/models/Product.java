@@ -1,7 +1,5 @@
 package in.aj7parihar.product_service_class_110524.models;
 
-//import jdk.jfr.Category;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -22,6 +20,6 @@ public class Product extends BaseModel{
     // category id here is foreign key hence we will mention the mapping here
     // and since now two tables are connected we are using cascade so that changes
     // are reflected accordingly.
-    @ManyToOne (cascade = {CascadeType.PERSIST} )
+    @ManyToOne(cascade = {CascadeType.PERSIST} )
     private Category category;
 }

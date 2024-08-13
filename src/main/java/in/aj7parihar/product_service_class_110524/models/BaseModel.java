@@ -15,6 +15,16 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 public class BaseModel {
+    // Here BaseModel class is an Abstract Class.
+    // Abstract class is an idea or concept that does not exist physically.
+    // Like Interface the Abstract class will also have behaviours which are not concrete.
+    // And unlike Interface the Abstract class will also have attributes.
+
+    // When we have attributes along with behaviours we go for abstract class.
+    // Also, whenever we want to restrict object creation we go for abstract class.
+    // 'Final' object will be created but class won't be extended further.
+    //
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

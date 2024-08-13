@@ -1,0 +1,18 @@
+Class - 07052024, 09052024, 11052024, 14052024
+
+
+# @Getters, @Setters & Lombok
+    - Accessing any attribute from outside is not possible as they are private hence we have @Getters and @Setters.
+    - 'lombok' package automatically takes care of generating getter and setters.
+    - We can also generate them manually.
+    - Getters and Setters methods are public hence it becomes easy to set a value or get a value
+        of any attribute from outside.
+
+
+@RestController, @Controller
+@RequestMapping, @GetMapping, @PostMapping, @PutMapping, @PatchMapping, @DeleteMapping
+@PathVariable
+
+
+@Id
+@GeneratedValue (strategy = GenerationType.INDENTITY)

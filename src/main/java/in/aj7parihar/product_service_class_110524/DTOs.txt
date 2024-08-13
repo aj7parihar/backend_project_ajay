@@ -1,0 +1,119 @@
+Class - 11052024
+
+
+## DTOs
+
+
+# How to get the Parameters in API call?
+-> We can get/pass the parameters in API call in below three ways:
+
+    - Path/Context Parameters: These are embedded in URL path or forms the endpoint.
+
+    - Query/Request Parameters: these are passed into the URL itself after endpoint & path parameters,
+        separated by '?'.
+
+    - Request Body: The body of the API in case of POST, PUT & PATCH calls.
+
+
+-> In case of FakeStoreProductService we were not required to build the repositories and models, as we were
+    fetching and storing data from/to Fake Store.
+    - Also, instead of communicating directly to FakeStore service we build our own system (which consisted of
+      Controller and Service class), and this is called PROXY system.
+      example - Proxy attendance in college on behalf of others.
+      - PROXY systems do not have business logic, just for communication from Client to 3rd party systems and vice-versa.
+
+
+
+
+# DTO
+D - Data
+T - Transfer
+O - Object
+
+-> Any information which needs to go out or come into our system (either through client or 3rd party)
+    MODELS are not involved directly as it can expose sensitive fields publicly.
+    - Hence we have DTOs for such operations.
+
+-> DTOs are light-weight, simple, plain Java objects (POJO) that contains the data.
+
+-> Purpose of DTO
+    - Send data to outside system.
+    - Receive data from outside system.
+
+-> How DTOs Work
+   Creation: DTOs are typically created in the service layer or controller layer.
+
+   Use in Controllers: Controllers in Spring Boot use DTOs to receive or send data.
+        When a request comes in, the controller might convert the incoming data to a DTO,
+        pass it to the service layer, and then return a DTO as part of the response.
+
+   Conversion: DTOs often require conversion from or to entity objects.
+        This can be done manually (we did in FakeStoreService) or using libraries like MapStruct, ModelMapper, etc.
+
+
+-> Advantages of DTOs
+    - Decoupling: Entity data model (ex. database entities) and API data model (ex. JSON object) are loosely
+        coupled and not tightly linked, hence decoupling.
+        - There can be lot fields in Entity, and the request API will not have all these fields
+            hence better to have decoupling.
+
+    - Security: Sensitive fields are protected from being exposed to client or outer world.
+        - Example:
+            Entity Class -
+            @Entity
+            public class User {
+                @Id
+                @GeneratedValue(strategy = GenerationType.IDENTITY)
+                private Long id;
+
+                private String username;
+
+                private String password;
+
+                private String email;
+
+                // Getters and setters
+            }
+
+
+            DTO Class -
+            public class UserDTO {
+                private Long id;
+                private String username;
+                private String email;
+
+                // Getters and setters
+            }
+
+       - Here if we notice then entity class has field "password", which is not in the DTO class.
+            and this is how DTOs provide security.
+
+
+    - Validation: can validate incoming data using annotations like "@NotNull", "@Size", etc,.
+
+
+-> Summary
+    - Why we use DTOs and not MODELS directly?
+        - We do not want to expose sensitive or private data of entity into public.
+        - If there is no sensitive data then we can use MODELS as it is.
+        - Both DTOs and Model data can change in future to not have the same parameter,
+            hence good to use DTOs in such cases.
+
+
+
+
+
+
+## Interface -
+
+-> Today we are building proxy system to connect client with 3rd party i.e. FakeStoreProduct service.
+-> Tomorrow we might want to have our own product service, and in future we might want to switch to some other
+    service (or 3rd party) hence everytime creating a new service and making changes in controller is tiresome.
+    - The above approach is called tight coupling.
+
+-> Therefore in order to avoid tight coupling, and we should always have Interfaces.
+    - and in future based on requirement we should implement these interfaces.
+
+-> Always code to an INTERFACE rather than concrete implementation or tight coupling.
+
+-> Interface means contract.

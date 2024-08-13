@@ -35,7 +35,7 @@ public class ProductController {
         // Here ProductService is an Interface (or contract), now the reference to the object...
         // "productService" of type ProductService will directly call the methods belonging to different
         // Product Services like FakeStoreProductService, our own Product Service, etc.
-        // Hence FakeStoreProductService or OurOwnProductService will implement this contract/interface (ProductService)
+        // Hence, FakeStoreProductService or OurOwnProductService will implement this contract/interface (ProductService)
         // and THIS MY DEAR FRIEND IS THE BEAUTY OF INHERITANCE & INTERFACE.
 
         // Just like Animal class can act as an Interface, and Cats & Dogs class will implement this interface

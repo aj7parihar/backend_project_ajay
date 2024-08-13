@@ -1,0 +1,98 @@
+Class - 09052024
+
+## APIs
+A - Application
+P - Programing
+I - Interface (contract of the webservices)
+
+-> You go to a Tamil restaurant, you speak english, waiter speaks tamil, so will the communication ever happen?
+-> The answer is NO, so how to overcome this?
+-> We can overcome this by setting up some standards or guidelines or contract that both customer and waiter has
+    to follow inorder to communicate with each other.
+    And this contract serves as the interface for communication between two of them.
+
+-> Similarly, in s/w world "Interface" is a contract b/w two or more webservices using which they communicate
+    and work with each other, and if either of the service deviates from the contract they won't be able to work.
+    Example - User send the POST request with one of the payload field as "tmp" whereas backend understand "temp",
+    since the fields does not match, the contract is broken,and the communication will not happen,
+    also error will be thrown.
+
+-> Read little more about APIs in the end of this file.
+
+
+
+
+## REST
+RE - REpresentational
+S -  State
+T -  Transfer
+
+-> REST is an architecture to design and implement web services.
+
+-> REST is not a rule rather it is convention/guideline/best practice to design web services.
+    - similar to MVC architecture.
+
+
+# Common conventions to keep in mind while building REST APIs:
+    - APIs should be structured around the resources that they are intended to work on.
+        - example: https://localhost:8080/products and not like https://localhost:8080/websitename/database/getsomedetails
+
+    - REST APIs should be stateless.
+        - Any API request should be equally serviceable by any server of that application.
+        - Every API should be self-sufficient i.e. it should contain all the information required to serve the request,
+            i.e. should not be dependent on server.
+        - An API request should not assume anything or should not be dependent on previous request.
+
+    - Do not have chatty APIs
+        - i.e. generally developers try to have 1:1 mapping with how my DB table looks and how will be my API response.
+        example - building API for each column of the DB table are called chatty APIs.
+
+    - REST is independent of response data types such as JSON, XML, YAML, HTML, Protobuf, etc.
+        - Protobuf: Protocol Buffers, is very    fast, built by google.
+        - JSON: light weight, human-readable as it is string or key value pair (string reading by machine is
+            slow hence Google has come up with Protobuf as it is encoded and read very fast by machines, Protobuf is
+            not human-readable as it is not a string).
+
+    - Do not have REST APIs as verbs (actions).
+        - example: /do-something            rather      /products
+                  /get-user-details         rather      /users
+                  /do-magic
+
+# Advantages of RESTful Web Service
+    - Scalability : Achieved through Statelessness.
+    - Flexibility: Independent of response data types.
+    - Simplicity: Simple to design and implement hence widely adopted.
+
+
+# Common Use Cases
+    - APIs for mobile and web application.
+    - Microservices architecture.
+    - Data exchange b/w different system, irrespective of systems codebase.
+
+
+-> RESTful - here 'ful' indicates that the web services or APIs are full of or adheres to the REST principles.
+    - kinda like adjective when describing something that adheres to some principles.
+    - Hence:
+        REST - architecture to design and implement web service or APIs.
+        RESTful - describes the web service or APIs that follows REST principles/convention/guidelines/best practices.
+
+
+
+-> URL vs URI vs End Point
+    - URI or URL are same in a broader context: https://api.example.com/users/123
+        URI - Uniform Resource Identifier is a superset of URL and consists of URL & URN
+
+    - Endpoint: /users/123
+
+
+-> Web Services vs APIs
+    - Web Services
+        - subset of APIs
+        - can be accessed only over the web
+        - examples: SOAP, REST , WSDL, etc.
+
+    - APIs
+        - An interface or contract to implement web and non-web services.
+            - implement means facilitating the communication b/w two systems either over web or local (non-web).
+        - Superset of webservices
+        - can be accessed over web (called web services) and non-web or local (called system APIs or library APIs).

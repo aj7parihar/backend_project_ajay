@@ -12,12 +12,11 @@ import java.util.List;
 @Service("fakeStoreProductService")
 public class FakeStoreProductService implements ProductService {
 
-    private RestTemplate restTemplate; // RestTemplate is a class provided by Spring Web
-    // but since RestTemplate is a class provided by Spring framework itself hence we cannot Annotate this
-    // that is why we will create a new configuration and inside that create this file, and annotate as
+    private RestTemplate restTemplate; // RestTemplate is a in-built utility class provided by Spring Web
+    // but since it is a class provided by Spring framework itself hence we cannot Annotate this
+    // that is why we will create a new configuration and inside that create a class, and annotate as
     // Bean
     public FakeStoreProductService(RestTemplate restTemplate) {
-
         this.restTemplate = restTemplate;
     }
 
@@ -35,14 +34,14 @@ public class FakeStoreProductService implements ProductService {
 
     @Override
     public List<Product> getAllProducts(){
-        FakeStoreDTO[] fakeStoreDTOS = restTemplate.getForObject("https://fakestoreapi.com/products",
-                FakeStoreDTO[].class);
+        // List<FakeStoreDTO> fakeStoreDTOList = restTemplate.getForObject("https://fakestoreapi.com/products",
+        //         List<FakeStoreDTO>.class);
 
         // Here at first List<FakeStoreDTO>.class was throwing error "Cannot access class object of parameterized type"
         // From here will learn about the concept of Generics in java: list, maps etc. all are generics
         // Why generics - because it takes any type of object and create a list, such as list<Integer>,
         // list<Character>, etc.
-        // Hence in-order to store list of FakeStoreDTO object we will introduce the concept of typeEraser,
+        // Hence, in-order to store list of FakeStoreDTO object we will introduce the concept of TypeErasure,
         // so that java will be able to create a list of any object type but for now we will work with array.
 
         // Parent of anything in Java is object, so if we use List.class (same as List<Object>)
@@ -51,6 +50,8 @@ public class FakeStoreProductService implements ProductService {
         // Hence jackson will not find any variables to convert and will get a null response.
 
         // For now we will use FakeStoreDTO[] to receive all the JSON objects from fakestore
+        FakeStoreDTO[] fakeStoreDTOS = restTemplate.getForObject("https://fakestoreapi.com/products",
+                FakeStoreDTO[].class);
 
         // Now we will convert all the fakestore objects to Product objects
         List<Product> products = new ArrayList<>();

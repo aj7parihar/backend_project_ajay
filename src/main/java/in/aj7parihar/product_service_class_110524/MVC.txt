@@ -1,0 +1,94 @@
+Class - 07052024
+
+## MVC
+
+-> MVC - Model-View-Controller
+        - It is an architecture which is common across all the F/Ws.
+        - Provides modularity by separating the application into three components: Model, View & Controller.
+        - Since it is separated into three components therefore it is
+            easy to develop, test and maintain the application.
+        - Also easy to understand the code.
+
+-> M : Model
+    - Model (noun/entity/class/table) is nothing but the data of our application.
+    - In Spring MVC, the model is usually represented by simple Java objects (POJOs) that contains data,
+        and are passed to the "VIEW" for rendering.
+
+-> V : VIEW
+    - View is nothing but the data that we queried and backend has returned, in JSON or other appropriate format.
+    - Responsible for rendering the model data into a web page or any other output format (like JSON, XML, etc.).
+    - The View is typically a JSP (JavaServer Pages) file.
+    - View is represented by various template engines, such as Thymeleaf, JavaServer Page (JSP),
+        FreeMarker, etc.
+    - The view is rendered on the client-side and is responsible for displaying the data in the desired format.
+
+-> C : Controller
+    - DispatcherServlet acts as the main controller to route the requests to their destination.
+    - Acts as an intermediary between the model and the view.
+    - Handles incoming web requests, processes the user input, interacts with the model,
+            and returns a view to be rendered.
+    - In Spring MVC, controllers are annotated with @Controller.
+    - These controllers define methods that handle specific HTTP requests using annotations like,
+        @RequestMapping or it's variant like @GetMapping, @PostMapping, etc.
+
+
+# How Spring MVC Works
+
+  Request Handling:
+    - A user makes a request to the web application, such as accessing a specific URL.
+
+
+  DispatcherServlet:
+    - The request is intercepted by Spring's DispatcherServlet, which acts as the front controller
+      in the Spring MVC architecture.
+    - The DispatcherServlet dispatches the request to the appropriate controller based on the request URL.
+
+
+  Controller Processing:
+    - The controller processes the request, interacts with the service layer or model to
+      retrieve or manipulate data, and prepares a model to be displayed in the view.
+
+
+  View Resolution:
+    - The controller returns a logical view name to the DispatcherServlet.
+    - The DispatcherServlet uses a ViewResolver to map the logical view name to an
+      actual view implementation (like a JSP or Thymeleaf template).
+
+
+  Rendering the View:
+    - The selected view renders the model data and generates the response,
+      which is then sent back to the user’s browser
+
+
+
+
+# Key Features of Spring MVC
+
+  Annotation-Based Controllers:
+    - Spring MVC allows the use of annotations like @Controller, @RequestMapping, @GetMapping, @PostMapping, etc.,
+        to define controllers and map requests to handler methods.
+
+  View Resolvers:
+    - Spring MVC provides support for various view technologies (JSP, Thymeleaf, FreeMarker, etc.),
+        and resolves logical view names to actual view templates using view resolvers.
+
+  Form Handling:
+    - Spring MVC simplifies "form" handling with features like data binding, form validation, and form tags.
+
+  Exception Handling:
+    - Centralized exception handling can be achieved using @ControllerAdvice and @ExceptionHandler.
+
+  Internationalization (i18n):
+    - Spring MVC provides built-in support for internationalization, allowing you to build applications
+        that can handle multiple languages and locales.
+
+  Flexible Configuration:
+    - Spring MVC allows both XML and Java-based configuration,
+        giving developers flexibility in how they set up their web applications.
+
+
+
+*** Until now whatever we have discussed 'VIEW' was done by backend when MVC was newly introduced, but
+with the time rendering of view is not done at the backend, rather FE takes care of it.
+The response is sent back to client/front-end in the form of JSON and with the help of React or Angular libraries
+it (FE) takes the appropriate actions. ***

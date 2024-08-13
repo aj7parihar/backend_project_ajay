@@ -1,0 +1,220 @@
+Class 11052024
+
+## RestTemplate
+    - It is a utility class in Spring f/w - provided by "spring-boot-starter-web"
+        - public class RestTemplate extends InterceptingHttpAccessor implements RestOperations.
+    - It is a SYNCHRONOUS HTTP Client hence thread safe.
+    - Used for making HTTP request to external RESTful web services.
+    - Used for making API (or HTTP requests) calls to 3rd party.
+
+    - It simplifies the interaction with external HTTP servers
+        - by handling HTTP connections such as opening and closing,
+        - by handling request & response headers, and
+        - by converting responses from 3rd party API/web services to Java object.
+
+    - Automatically converts Java (class) objects to HTTP request and HTTP response to Java (class) objects.
+        - It uses 'HttpMessageConverter' to handle serialization and deserialization of the request and response.
+            - Supported formats include:
+              JSON (via Jackson, Gson, etc.)
+              XML (via JAXB, etc.)
+              Plain text
+              Form data
+
+    - By default, it throws exception for HTTP errors.
+        - example, a "404 Not Found" response will lead to "HttpClientErrorException".
+        - We can customize exception handling by implementing "<<ResponseErrorHandler>>".
+
+    - Request and Response can be enhanced by implementing "RequestCallback"
+        and "ResponseExtractor".
+            - It provides more granular control over the request execution.
+
+            // Sample Code -
+            RequestCallback requestCallback = request -> {
+                // Modify the request headers, body, etc.
+            };
+
+            ResponseExtractor<String> responseExtractor = response -> {
+                // Custom response handling logic
+                return StreamUtils.copyToString(response.getBody(), Charset.defaultCharset());
+            };
+
+            String response = restTemplate.execute("https://example.com/api/resource",
+                            HttpMethod.GET, requestCallback, responseExtractor);
+
+
+    - We can also use "Interceptors" for manipulating the request before it is sent and
+        the response before it is returned.
+            - Useful for logging, authentication, or modifying headers.
+
+            // Sample Code -
+            ClientHttpRequestInterceptor interceptor = (request, body, execution) -> {
+                // Modify request headers
+                request.getHeaders().add("Authorization", "Bearer token");
+                return execution.execute(request, body);
+            };
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getInterceptors().add(interceptor);
+
+            Post post = restTemplate.getForObject("https://jsonplaceholder.typicode.com/posts/1", Post.class);
+
+
+    - RestTemplate can also be configured to use custom HTTP client, such as Apache HttpClient, OkHttp,
+        to support advanced features like connection pooling, timeouts and proxy settings.
+
+        // Sample Code -
+        // Example with Apache HttpClient:
+
+        import org.apache.http.impl.client.CloseableHttpClient;
+        import org.apache.http.impl.client.HttpClients;
+        import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+        import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+
+        public RestTemplate customRestTemplate() {
+            PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+            connectionManager.setMaxTotal(100);
+            connectionManager.setDefaultMaxPerRoute(20);
+
+            CloseableHttpClient httpClient = HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .build();
+
+            HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+
+            return new RestTemplate(requestFactory);
+        }
+
+
+    - RestTemplate in itself is Synchronous, but we can combine it with Spring’s "@Async" annotation
+        or "CompletableFuture" to perform non-blocking HTTP requests.
+
+        // Sample Code -
+        @Async
+        public CompletableFuture<Post> getPostAsync(int id) {
+            Post post = restTemplate.getForObject("https://jsonplaceholder.typicode.com/posts/{id}",
+                        Post.class, id);
+            return CompletableFuture.completedFuture(post);
+        }
+
+
+
+# Deprecation notice and transition to "WebClient"
+
+    - WebClient is introduced in Spring 5.
+    - WebClient is part of Spring's WebFlux f/w.
+    - WebClient is a modern, alternative HTTP client to RestTemplate.
+    - For reactive applications or non-blocking HTTP calls, we can use Web Client.
+
+-> Here's a simple comparison between RestTemplate and WebClient:
+    - Blocking: RestTemplate is blocking and synchronous (hence thread safe).
+    - Non-Blocking: WebClient is non-blocking and asynchronous (hence not thread safe).
+    - Flexible: WebClient provides a more flexible API with better support for reactive streams.
+
+    - RestTemplate uses "Java Servlet API" and is therefore synchronous and blocking.
+    - WebClient not only provides a traditional synchronous API,
+        but it also supports an enhanced nonblocking and asynchronous approach.
+        - Since Web Client is non-blocking hence it can handle large number of simultaneous HTTP calls.
+
+
+*** Similar to RestTemplate we have another HTTP Client called "RestClient" which shares the
+same infrastructure as RestTemplate i.e., request factories, request interceptors
+and initializers, message converters, etc.
+    - However, RestClient is the focus for new higher-level features. ***
+
+
+
+# Most commonly used methods of RestTemplate -
+    // GET
+    1. public <T> T getForObject(URI url, Class<T> responseType) throws RestClientException
+
+        Sends a GET request and converts the response to the specified Java object.
+        Usage:
+        Post post = restTemplate.getForObject("https://jsonplaceholder.typicode.com/posts/1", Post.class);
+
+        - We can Override 'getForObject' to have other implementations.
+
+
+    // POST
+    2. public <T> T postForObject(URI url, @Nullable Object request, Class<T> responseType)
+       			throws RestClientException
+
+        Sends a POST request with a request body and converts the response to the specified Java object.
+        Usage:
+        Post newPost = new Post(1, "Title", "Body");
+        Post createdPost = restTemplate.postForObject("https://jsonplaceholder.typicode.com/posts",
+                            newPost, Post.class);
+
+
+    // PUT
+    3. public void put(URI url, @Nullable Object request) throws RestClientException
+
+        Sends a PUT request to update a resource.
+        Usage:
+        Post updatedPost = new Post(1, "Updated Title", "Updated Body");
+        restTemplate.put("https://jsonplaceholder.typicode.com/posts/1", updatedPost);
+
+
+    // PATCH
+    4. public <T> T patchForObject(URI url, @Nullable Object request, Class<T> responseType)
+       			throws RestClientException
+
+        Sends a PUT request to update a resource.
+        Usage:
+
+
+    // DELETE
+    5. public void delete(URI url) throws RestClientException
+
+        Sends a DELETE request to remove a resource.
+        Usage:
+        restTemplate.delete("https://jsonplaceholder.typicode.com/posts/1");
+
+
+    // Exchange
+    6. public <T> ResponseEntity<T> exchange(URI url, HttpMethod method, @Nullable HttpEntity<?> requestEntity,
+       			Class<T> responseType) throws RestClientException
+
+        A more flexible method for executing requests with full control over the HTTP method (all methods),
+        headers, and response handling.
+        Usage:
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer token");
+
+        HttpEntity<Post> entity = new HttpEntity<>(new Post(1, "Title", "Body"), headers);
+
+        ResponseEntity<Post> response = restTemplate.exchange("https://jsonplaceholder.typicode.com/posts",
+                                        HttpMethod.POST, requestEntity, Post.class);
+        Post createdPost = response.getBody();
+
+
+    // Execute
+    7. public <T> T execute(URI url, HttpMethod method, @Nullable RequestCallback requestCallback,
+       			@Nullable ResponseExtractor<T> responseExtractor) throws RestClientException
+
+        Provides even more flexibility, allowing you to execute arbitrary HTTP requests.
+        Usage:
+        RequestCallback requestCallback = request -> {
+            HttpHeaders headers = request.getHeaders();
+            headers.add("Authorization", "Bearer token");
+        };
+
+        ResponseExtractor<Post> responseExtractor = response -> {
+            return new ObjectMapper().readValue(response.getBody(), Post.class);
+        };
+
+        Post post = restTemplate.execute("https://jsonplaceholder.typicode.com/posts",
+                    HttpMethod.GET, requestCallback, responseExtractor);
+
+
+// Refer to project for this:
+-> In our BE project module when we had to communicate with FakeStore Service, so we used RestTemplate.
+
+-> But since RestTemplate is an in-built class provided by Spring itself, how do we do it's DI
+    in FakeStoreService class?
+    - We cannot write @Bean as it is in-built class and not created by us.
+    - We can achieve DI for this by creating another package called "configurations" and in that package
+        we can create an "ApplicationConfiguration" class.
+    - So this "ApplicationConfiguration" class is a general class for defining custom configurations.
+        - like in addition to RestTemplate configuration we can do other configurations such as ModelMapper, etc.
+
+

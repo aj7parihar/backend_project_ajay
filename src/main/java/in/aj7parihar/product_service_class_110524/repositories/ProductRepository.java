@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-
 public interface ProductRepository extends JpaRepository<Product, Long> {
     // Now similarly like ProductService interface we have ProductRepository interface which can be
     // implemented by any product repositories like MySQLProductRepository or PostgresSQLProductRepository, etc.
