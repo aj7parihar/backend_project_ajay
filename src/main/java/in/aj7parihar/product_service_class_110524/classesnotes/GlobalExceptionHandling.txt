@@ -1,0 +1,142 @@
+Class 140502024
+
+
+# Historical Overview:
+
+-> Before Spring 3.2, the two main approaches for handling exceptions were:
+    - HandlerExceptionResolver
+    - @ExceptionHandler
+    - Both had their drawbacks.
+
+-> Since 3.2, we had @ControllerAdvice to overcome the drawbacks of previous two solutions and provide
+    unified global exception handling for the whole application.
+
+-> Now with Spring 5, we have "ResponseStatusException" class - fast way to handle basic exceptions.
+
+
+# Solution 1: the Controller-Level @ExceptionHandler
+    - Defining the Exception Handler inside the Spring MVC Controller class
+    public class FooController{
+
+        //...
+        @ExceptionHandler({ CustomException1.class, CustomException2.class })
+        public void handleException() {
+            //
+        }
+    }
+
+    Drawback:
+    - @ExceptionHandler annotated method is active only for particular Controller and not globally for the whole
+        application.
+    - Even if we apply the same approach individually to all the classes this was not feasible.
+    - Workaround was to have an exception handler on the base controller class and then all controller classes
+        extending it, which was also not feasible.
+
+
+# Solution 2: the HandlerExceptionResolver
+    - It was combination of DefaultHandlerExceptionResolver and ResponseStatusExceptionResolver
+    - Provide the good error handling for Spring RESTful Service to some extent.
+    - But the downside was that it had no control over the body of the response, i.e.,
+        - only mapped the status code to the response.
+        - did not map the body to the response
+        - did not handle the null body.
+
+
+
+# Solution 3: @ControllerAdvice
+    - Introduced with Spring 3.2
+    - Provides a unified and global exception handling using
+        @ExceptionHandler with the @ControllerAdvice annotation.
+
+    Benefits:
+    - It gives us full control over complete HTTP response.
+    - Handles multiple exception for the same method.
+    - It makes good use of the newer RESTful ResponseEntity response.
+
+
+
+# Solution 4: ResponseStatusException (Spring 5 and Above)
+    - We can create an instance of it providing an HttpStatus and optionally a reason and a cause:
+    // example -
+    // mentioned responseObject (if coming from third party in Service layer)
+            or classObject (if coming from Service layer to Controller) based on the implementation.
+    if(responseObject or classObject == null){
+        throw new ResponseStatusException(
+                   HttpStatus.NOT_FOUND, "Foo Not Found", exc);
+    }
+
+    Benefits:
+    - Quite fast: excellent for prototyping
+    - Avoids creating too many custom exception classes as compared to @ExceptionHandler with @ControllerAdvice
+    - More control over exception handling
+
+    Tradeoffs/Disadvantages:
+    - No unified global exception handling as compared to @ExceptionHandler with @ControllerAdvice
+    - Code duplication: same code in multiple controller or service classes.
+
+
+***
+    we can combine and implement a @ControllerAdvice globally but also ResponseStatusExceptions locally.
+***
+
+
+6. Handle the Access Denied in Spring Security
+
+7. Spring Boot Support - Spring Boot provides an ErrorController implementation to handle errors in a sensible way.
+
+
+
+# @ControllerAdvice
+
+1. What is @ControllerAdvice?
+    - @ControllerAdvice is a special annotation in Spring
+    - Applies to multiple controllers (like ProductController, CategoryController in our case).
+    - It can be used to handle exceptions across the entire application.
+    - Or can handle exceptions related to specific controllers or packages.
+
+--> Sits b/w Client and Multiple Controllers.
+
+--> Basically @ControllerAdvice intercepts all the controllers responses and if there is something wrong then
+    it can throw an exception, modify/change the response.
+
+
+2. Common Use Cases
+    - Global Exception Handling: Handle exceptions thrown by any controller in a centralized way.
+
+    - Binding Global Request Data: Inject common attributes or data into the model for every request.
+
+    - Pre/Post-processing of Requests: Perform actions before or after a request is processed by a controller.
+
+
+3. How @ControllerAdvice Works
+
+    a. Handling Exceptions
+    - To handle exceptions globally, we can use the @ExceptionHandler annotation inside a @ControllerAdvice class.
+        This method will catch and process exceptions thrown by any controller.
+        // Example:
+        @ControllerAdvice
+        public class GlobalExceptionHandler {
+
+            @ExceptionHandler(Exception.class)
+            public ResponseEntity<String> handleAllExceptions(Exception ex) {
+                return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            @ExceptionHandler(ResourceNotFoundException.class)
+            public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+                return new ResponseEntity<>("Resource not found: " + ex.getMessage(), HttpStatus.NOT_FOUND);
+            }
+        }
+
+
+    b. Binding Global Request Data
+    - We can use @ModelAttribute in a @ControllerAdvice class to bind certain attributes to the model.
+        // Example:
+        @ControllerAdvice
+        public class GlobalModelAttributeAdvice {
+
+            @ModelAttribute
+            public void addAttributes(Model model) {
+                model.addAttribute("projectName", "My Project");
+            }
+        }

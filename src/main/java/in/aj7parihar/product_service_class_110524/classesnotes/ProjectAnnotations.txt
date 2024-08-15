@@ -8,11 +8,16 @@ Class - 07052024, 09052024, 11052024, 14052024
     - Getters and Setters methods are public hence it becomes easy to set a value or get a value
         of any attribute from outside.
 
+-> @ControllerAdvice:
+   A Spring annotation used to define a global exception handler.
+
 
 @RestController, @Controller
 @RequestMapping, @GetMapping, @PostMapping, @PutMapping, @PatchMapping, @DeleteMapping
 @PathVariable
 
+@ResponseStatus
 
 @Id
 @GeneratedValue (strategy = GenerationType.INDENTITY)
+

@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration // Need to tell Spring that this is a special class hence annotating this
-
 /* Diff. b/w @Configuration and @Component -
     @Component:
         Think of @Component as a worker in a factory.
@@ -19,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
         Automatically picked up during ComponentScanning process since it is a specialized
         version of @Component annotation.
  */
-
 
 public class ApplicationConfiguration {
 

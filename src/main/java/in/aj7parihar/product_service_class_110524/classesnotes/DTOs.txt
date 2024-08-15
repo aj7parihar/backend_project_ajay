@@ -30,7 +30,7 @@ D - Data
 T - Transfer
 O - Object
 
--> Any information which needs to go out or come into our system (either through client or 3rd party)
+-> Any information which needs to go out of or come into our system (either to/from client or 3rd party)
     MODELS are not involved directly as it can expose sensitive fields publicly.
     - Hence we have DTOs for such operations.
 

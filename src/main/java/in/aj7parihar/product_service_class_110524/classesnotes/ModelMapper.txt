@@ -1,0 +1,88 @@
+Class 14052024
+
+## ModelMapper
+    - Not a part of core Spring f/w.
+    - It is a third party Java library, which is integrated with Spring f/w.
+    - It automatically maps entities to DTOs and vice-versa.
+    - The conversion is done in the CONTROLLER layer, far away from Service layer
+    - It is "type-safe" i.e. reduces the chance of runtime errors due to incorrect mappings.
+
+    - Manual mapping of entities to/from DTOs can be tedious, error-prone, hence ModelMapper
+        automates this process ensuring consistency.
+
+    - If source and destination fields align it does "Type" matching.
+
+    - And if source and destination fields does not align then we can do custom mapping.
+
+
+    - Example
+
+    // Source model
+    // Assume getters and setters on each class
+    class Order {
+      Customer customer;
+      Address billingAddress;
+    }
+
+    class Customer {
+      Name name;
+    }
+
+    class Name {
+      String firstName;
+      String lastName;
+    }
+
+    class Address {
+      String street;
+      String city;
+    }
+
+
+    // Destination Model
+    // Assume getters and setters
+    class OrderDTO {
+      String customerFirstName;
+      String customerLastName;
+      String billingStreet;
+      String billingCity;
+    }
+
+
+    // Mapping
+    ModelMapper modelMapper = new ModelMapper();
+    OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+
+    // Testing
+    assertEquals(order.getCustomer().getName().getFirstName(), orderDTO.getCustomerFirstName());
+    assertEquals(order.getCustomer().getName().getLastName(), orderDTO.getCustomerLastName());
+    assertEquals(order.getBillingAddress().getStreet(), orderDTO.getBillingStreet());
+    assertEquals(order.getBillingAddress().getCity(), orderDTO.getBillingCity());
+
+
+*** In class 11052024, we were sending the DTOs to FakeStore and in the Service layer only we were converting
+    FakeStore response to ProductResponseDTO and then sending this to Controller, all this was done manually.
+***
+
+    - The above approach will work but is not good.
+
+*** In class 14052024, we learned about ModelMapper Java class which automatically converts Entities to DTOs
+    and vice versa.
+
+    Now while sending the request to FakeStore we are still converting it to FakeStoreRequestDTO manually
+    and once we receive the response from FakeStore WE ARE NOT converting it to FakeStoreResponseDTO in the
+    Service layer, rather converting it back to Product and then sending this Product to Controller layer as it
+    is.
+
+    Once the Controller layer receives the Product, it then implements a method() which converts
+    Product (object) to ProductResponseDTO using ModelMapper.
+
+    - Within system always use MODELS.
+
+    - DTOs are for external interactions.
+***
+
+
+NOTE: In our BE project we only did Entity/Model conversion to ResponseDTO in Controller, but we can also
+      convert the incoming JSON object to RequestDTO in Controller using ModelMapper
+      (which we are doing manually in Service layer).

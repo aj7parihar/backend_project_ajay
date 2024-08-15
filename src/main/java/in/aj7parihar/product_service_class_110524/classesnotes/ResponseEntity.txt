@@ -1,0 +1,133 @@
+Class 14052024
+
+
+## HTTP Response Status Code
+- Read about it here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+
+## ResponseEntity
+    - It is an extension of HttpEntity (abstract class)
+        public class ResponseEntity<T> extends HttpEntity<T>   // <T> means return type is generic
+
+    - It is a fundamental class in Spring f/w.
+
+    - It allows us to manipulate complete HTTP response in a flexible and powerful way.
+        - complete HTTP response means response status code, headers and body.
+        - ResponseEntity represents the whole HTTP response: status code, headers, and body.
+
+    - Using this we can customize HTTP response to be returned to Client from RESTful API/Web Services.
+
+    - It is used in "RestTemplate" as well as in "@Controller" methods.
+
+    - In RestTemplate, this class is returned by "getForEntity()" and "exchange()":
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<String> entity = template. getForEntity("https:// example. com", String.class);
+        String body = entity.getBody();
+        MediaType contentType = entity.getHeaders().getContentType();
+        HttpStatus statusCode = entity.getStatusCode();
+
+
+    - It can also be used in Spring MVC Controller class as return type from @Controller methods
+        @RequestMapping("/handle")
+          public ResponseEntity<String> handle() {
+            URI location = ...;
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.setLocation(location);
+            responseHeaders.set("MyResponseHeader", "MyValue");
+            return new ResponseEntity<String>("Hello World", responseHeaders, HttpStatus.CREATED);
+          }
+          // We are using this in our BE Project
+
+
+        // Or, by using a builder accessible via static methods:
+         @RequestMapping("/ handle")
+         public ResponseEntity<String> handle() {
+           URI location = ...;
+           return ResponseEntity.created(location).header("MyResponseHeader", "MyValue").body("Hello World");
+         }
+
+    // syntax for using this in @Controller methods
+    - @Override
+      		public <T> ResponseEntity<T> body(@Nullable T body) {
+      			return new ResponseEntity<>(body, this.headers, this.statusCode);
+      		}
+
+
+*** ResponseEntity provides two nested builder interfaces: HeadersBuilder and its subinterface, BodyBuilder.
+    Therefore, we can access their capabilities through the static methods of ResponseEntity.
+***
+
+# Common Use Cases - BUILDER Design Pattern way
+    1. Returning a Status Code Only
+        @GetMapping("/no-content")
+        public ResponseEntity<Void> noContent() {
+            return ResponseEntity.noContent().build();
+        }
+
+        - This will return a response with HTTP status 204 No Content.
+
+
+    2. Returning a Response with a Body
+        @GetMapping("/hello")
+        public ResponseEntity<String> sayHello() {
+            return ResponseEntity.ok("Hello, World!");
+        }
+
+        - This will return a 200 OK response with the body "Hello, World!".
+
+
+    3. Setting custom HTTP Headers
+        @GetMapping("/custom-headers")
+        public ResponseEntity<String> customHeaders() {
+            return ResponseEntity.ok()
+                .header("Custom-Header", "CustomValue")
+                .body("Hello with Custom Header");
+        }
+
+        - This response includes a custom header along with the response body and 200 OK.
+
+
+    4. Returning Different Status Codes
+        @GetMapping("/resource/{id}")
+          public ResponseEntity<String> getResource(@PathVariable String id) {
+              if ("1".equals(id)) {
+                  return ResponseEntity.ok("Resource found");
+              } else {
+                  return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                       .body("Resource not found");
+              }
+          }
+
+        - This will return a 200 OK if the resource is found, and 404 Not Found if it isn’t.
+
+
+    5. Using ResponseEntity with Objects
+        @GetMapping("/user/{id}")
+        public ResponseEntity<User> getUser(@PathVariable Long id) {
+            User user = userService.findUserById(id);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        }
+
+        - Here, a User object is returned in the response body, and the 200 OK status is returned
+            if the user is found. Otherwise, it returns 404 Not Found.
+
+
+    6. Customizing Status and Body Together
+        @PostMapping("/create-user")
+        public ResponseEntity<String> createUser(@RequestBody User user) {
+            boolean created = userService.createUser(user);
+            if (created) {
+                return ResponseEntity.status(HttpStatus.CREATED)
+                                     .body("User created successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                     .body("Failed to create user");
+            }
+        }
+
+        - This returns a 201 Created status if the user is successfully created,
+            or a 400 Bad Request if the creation fails.

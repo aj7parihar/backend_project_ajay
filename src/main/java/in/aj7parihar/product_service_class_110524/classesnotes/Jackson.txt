@@ -1,0 +1,76 @@
+Class 14052024
+
+## Jackson
+    - It is a widely used Java library.
+    - Integrated with Spring f/w and comes out of the box with Spring Boot f/w.
+    - Part of "spring-web" or "spring-boot-starter-web" dependencies.
+
+    - Provides powerful JSON processor for reading, writing and modifying JSON data.
+
+    - It converts Java objects to JSON data (by Serialization) and vice-versa (by Deserialization).
+
+    - @RestController annotation understands that it needs conversion, internally it uses @ResponseBody annotation.
+
+
+
+    Serialization
+    To convert a Java object to JSON, we can use ObjectMapper, which is the main class of Jackson.
+    // syntax
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonString = mapper.writeValueAsString(yourObject);
+
+
+    Deserialization
+    To convert JSON to a Java object:
+    // syntax
+    ObjectMapper mapper = new ObjectMapper();
+    YourClass classObject = mapper.readValue(jsonString, YourClass.class);
+
+
+    @Annotations
+    To customize how Java objects are serialized and deserialized, Jackson provides several annotations:
+
+    @JsonIgnore: Ignores a property during serialization and deserialization.
+    @JsonProperty: To specify a different name for a field in the JSON.
+    @JsonFormat: Customizes the format of dates.
+    @JsonInclude: Controls which properties are included in the JSON.
+
+    Example:
+    public class User {
+
+        @JsonProperty("user_id")
+        private int id;
+
+        @JsonIgnore
+        private String password;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+        private Date birthDate;
+
+        // Getters and Setters
+    }
+
+
+    - We can also can create our own (custom) serializers or deserializers by extending
+        "JsonSerializer" or "JsonDeserializer" classes.
+
+
+    - Jackson can also handle complex data structures i.e. nested objects.
+
+    - In a Spring MVC controller, Jackson is automatically used to convert Java objects to JSON and vice versa.
+
+
+
+    Jackson Modules
+    Jackson has several modules that extend its capabilities. For example:
+
+    Jackson JSR310: For Java 8 date/time types.
+    Jackson Kotlin Module: For Kotlin support.
+    Jackson Afterburner: For improving performance.
+
+
+    Error Handling
+    When Jackson fails to serialize or deserialize JSON, it throws a "JsonProcessingException".
+    We can handle these exceptions globally in Spring using @ControllerAdvice.
+
+
