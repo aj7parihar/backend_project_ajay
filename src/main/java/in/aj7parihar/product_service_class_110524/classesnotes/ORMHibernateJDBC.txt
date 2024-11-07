@@ -1,0 +1,98 @@
+## ORM, Hibernate, Models
+
+
+- JPA is an interface/API which provides some contracts/guidelines.
+        - provides set of interfaces (JpaRepository, etc.) and annotations (like @Entity, etc.).
+
+    - Spring Data JPA uses JPA to manage relational DB.
+    - Since JPA is an interface it needs someone to implement it.
+    - Therefore ORM comes into picture.
+    - ORM is a technique/translator/mechanism that implements JPA.
+
+
+# ORM
+    - Traditional way of interacting with DB
+        - Connect to DB.
+        - Create Tables.
+        - Give the column names
+        - define constraints
+        - Write queries
+        - CRUD operations on these tables.
+
+    lot of work for developers.
+
+    - The above problem is solved by using ORM.
+
+    O - Object
+    R - Relational
+    M - Mapper
+
+    - All F/Ws provide this.
+
+    @Entity
+    - It is an interface, and part of "jakarta.persistence" package.
+
+    - When applied to a model class, it indicates that it is a JPA entity (no @Table annotation exists).
+
+    - This tells Hibernate (best ORM) to make a table out of this class.
+        - Hibernate automatically translates the entity object into a table.
+
+
+    How ORM Works in SpringBoot:
+    -> It looks for @Entity annotation in model class.
+    -> Convert Model/Entity object to a table in DB.
+    -> Defines constraints based on the annotations such as @Id for primary key, etc.
+    -> Creates columns based on the attributes of the class.
+    -> Represent cardinalities based on the annotations such as @ManyToOne or @OneToMany.
+    -> Auto generates SQL queries based on the methods for CRUD operations w/o writing single query.
+
+
+
+# Hibernate
+    - best f/w to implement ORM mechanism.
+        - other ORM F/Ws are Juke, MyBatis, OpenJPA, TopLink, EclipseLink
+
+
+# Advantage of Hibernate (or ORM):
+    - Automatically generates SQL queries based on the methods (and these methods are provided by various
+        interface repositories such as JpaRepository, PagingAndSortingRepository, CrudRepository
+
+    - Provides own query language called HQL (Hibernate Query Language)
+        - similar to SQL, but it works with Java class objects instead of DB tables & columns.
+
+    - Hibernate supports "caching"--> better performance of application --> reducing database calls/queries.
+
+    - Hibernate supports LAZY & EAGER loading of data from DB.
+        - LAZY loading: with this loading Hibernate fetches data only when needed.
+        - EAGER loading: with this loading all the data is fetched at once.
+
+
+# How Hibernate Fits into Spring Boot
+    - When we use Spring Data JPA (which is built on top of JPA), Hibernate does the heavy lifting
+        behind the scenes:
+
+        - Entity Classes: Java model classes are mapped to database tables using Hibernate.
+        - Repositories: When we use a Spring Data JPA repository, Hibernate handles the actual database operations.
+        - Transactions: Hibernate manages the database transactions by making sure ACID properties aren't violated.
+
+
+-> For doing all the above operations, ORM/Hibernate connects to the DB by using JDBC interface.
+    - Using <<JDBC>> ORM/Hibernate can connect with any data source such as PostgreSQL, MySQL. etc.
+
+
+# JDBC
+    - It is an interface
+    - Provides abstraction by implementing various DB connections.
+
+    Flow:
+  App --> <<JPA>> --> ORM/Hibernate --> <<JDBC>> --> AnyDBConnector/Driver (MySQLDBConnector) --> AnyDB (MySQLDB)
+
+
+# Models
+    - Classes/Entities whose info we store in DB.
+
+
+    BaseModel: Parent abstract class which has common properties of all the models
+        - example: BasedModel for Product & Category in our project.
+
+

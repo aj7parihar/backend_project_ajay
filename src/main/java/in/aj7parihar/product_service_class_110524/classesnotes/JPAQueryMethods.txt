@@ -1,0 +1,143 @@
+## JPA Query Methods
+
+-> In order to get all the products from DB we need to write the query like:
+    select * from Products;
+
+-> But by using JPA query methods we do not need to write the query
+    // Example: I want list of all the products
+    public List<Product> getAllProducts(){
+        return productRepository.findAll();
+    }
+
+    - findAll() method is defined in ProductRepository interface
+    - this will make a DB call (internally using JPQL) and get the list of all the products as SQL object
+    - and then will convert the SQL object into Java object and return the result.
+    - All this will be taken care by Hibernate (or ORM) w/o writing single line of query.
+
+
+-> JPA supports querying the DB using below ways:
+    - Declared or Derived Query Methods (uses JPQL in the backend).
+    - Using @Query annotation and writing our own query using HQL in methods.
+    - Using native SQL query
+    - Using JPA named queries.
+
+For brief idea about Declared, @Query, Projections, Native SQL query refer ProductRepository Interface
+
+
+# Declared Queries
+    Structure of Declared Query Methods:
+    - prefixed with reserved keywords such as findBy, getBy, deleteBy, removeBy etc.
+    - followed by the attributes name such as Id, FirstName, LastName, Title
+    - and the operator keywords such as AND, OR, BETWEEN
+
+    Example:
+    Simple Query Method: findByIdIs(), findAll(), save(), delete()
+
+    Query Method Using JOINS: findAllByCategory_Title(String title)
+        - reduces DB call
+
+    Multiple Conditions: List<User> findByFirstNameAndLastName(String firstName, String lastName)
+        - List<Product> findByIdEqualsAndTitleEquals(long id, String title)
+
+    Using Comparison Keywords: findByAgeGreaterThan, findByAgeLessThan
+
+    Using Pagination: Page<User> findByLastName(String lastName, Pageable pageable);
+        - Finds all users with the given last name, but returns a Page object that supports pagination.
+
+    Using Sorting: List<User> findByLastNameOrderByFirstNameAsc(String lastName);
+        - Finds all users with the given last name and sorts them by their first name in ascending order.
+
+
+
+# Custom Queries: When JPA query methods are not sufficient then we can combine Query Methods
+    with @Query Annotation and HQL.
+
+    - Better performance
+    - Better Readability
+
+    Structure:
+    @Query (HQL query)
+    reservedKeyWords_MultipleConditions_Comparisons_StringMatching_Pagination/Sorting
+
+    // Example:
+    @Query("select p from Product p where p.category.title = :categoryName")
+    public List<Product> getProductsWithCategoryName(String categoryName);
+
+    @Query("select p.title as title from Product p where p.category.title = :categoryName")
+    public List<String> getProductTitles(String categoryName);
+
+
+# Native SQL Queries:
+    - When declared queries & custom queries do not fulfill the requirement then Spring provides
+        flexibility to write our own SQL queries.
+
+    - When we want to create index on some columns and want to perform joins on those columns for better
+        performance
+
+    Structure:
+    @Query (value = "Raw SQL Query", nativeQuery = true)
+    method()
+
+    // Example:
+    @Query(value = "SELECT * FROM employee WHERE department = :department", nativeQuery = true)
+    public List<Employee> findEmployeesByDepartment(String department);
+
+    Pros:
+    - More control over the query.
+    - More flexibility.
+    - More optimized queries.
+
+    Cons:
+    - Prone to human error.
+    - Native SQL queries are DB dependent, so if today we have MySQL and tomorrow Postgres then we might need
+        to rewrite the queries.
+    - JPA/Hibernate does not have control over native SQL query and won't validate them, and
+        issues will only be discovered at run time.
+
+
+
+# PROJECTION:
+    - Another way of fetching all or few fields.
+    - Projection is the utility provided by Hibernate.
+    - It is the interface created inside repository package.
+
+*** NOTE: Projection can be used with Declared Queries, Custom Queries & Native SQL queries. ***
+
+    Types of Projections:
+        - Interface Based: Like we have used in our project
+            - Interface defined with getter methods of all the attributes of the model/entity.
+            - Spring Data JPA using Hibernate will automatically map the query result to this interface.
+            - Easy to use and preferred for simple use cases.
+
+        - Class Based: DTO Projection
+            - Create a DTO class with Constructor, consisting of all the fields of the model/entity.
+            - Spring Data JPA using Hibernate will automatically map the query result to this DTO.
+            - Preferred for complex queries.
+
+        - Dynamic Projection
+            - Allows us to choose the projection type at run time.
+
+
+    // Example:
+    - For two attributes
+    @Query("select p.id as id, p.title as title from Product p where p.category.title = :categoryName")
+    public List<ProductWithIdAndTitle> getProductsWithIdAndTitle(String categoryName);
+
+    - But what if tomorrow I need multiple or all the attributes.
+    - Hence creating a Projection interface for the specific Model.
+
+    @Query("select p.id as id, p.title as title from Product p where p.category.title = :categoryName")
+    public List<ProductProjection> getDetails(String categoryName);
+
+
+
+
+
+
+
+
+
+
+
+
+

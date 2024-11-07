@@ -5,6 +5,9 @@ import in.aj7parihar.product_service_class_110524.models.Category;
 import in.aj7parihar.product_service_class_110524.models.Product;
 import in.aj7parihar.product_service_class_110524.repositories.CategoryRepository;
 import in.aj7parihar.product_service_class_110524.repositories.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +38,16 @@ public class SelfProductService implements ProductService {
         return productRepository.findAll();
     }
 
+    // getting all products using Pagination and Sorting
+    @Override
+    // As we cannot directly create Pageable hence we will use PageRequest class
+    // PageRequest class indirectly represents Pageable
+    // PageRequest --extends--> AbstractPageRequest --implements--> <<Pageable>> <<Serializable>>
+    public Page<Product> getAllProducts(int pageNumber, int pageSize, String sortParam) {
+        return productRepository.findAll(PageRequest.of(pageNumber, pageSize,
+                Sort.by(sortParam).descending()));
+    }
+
     @Override
     public Product addProduct(String title,
                               Double price,
@@ -57,7 +70,7 @@ public class SelfProductService implements ProductService {
 
             // categoryRepository.save(newCategory);
             // Why to make two DB calls for same thing, since we have already set "cascade = CascadeType.PERSISTS"
-            // hence if there is new category coming the Products class will auto. take care of it.
+            // hence if there is new category coming the Products, Category class will auto. take care of it.
 
 
             categoryFromDb = newCategory;
@@ -80,7 +93,7 @@ public class SelfProductService implements ProductService {
         if (productInDB == null) {
             throw new ProductNotFoundException("Product with an Id #" + productId + " is not found.");
         }
-        // some methods like "delete()" are there in the repository hence even without defining
+        // some methods like "delete()" are there in the JpaRepository hence even without defining
         // we can use them in our service class
         productRepository.delete(productInDB);
         return productInDB;

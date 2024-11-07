@@ -8,7 +8,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
+@Entity // This tells Hibernate (ORM) to make a table out of this class.
+// Hibernate automatically translates the entity object into a table.
 public class Product extends BaseModel{
     //private int id;
     //private long id; (changed from int to long, now removing from here as we have base model)
@@ -18,8 +19,8 @@ public class Product extends BaseModel{
     private String imageURL;
 
     // category id here is foreign key hence we will mention the mapping here
-    // and since now two tables are connected we are using cascade so that changes
-    // are reflected accordingly.
+    // and since now two tables are connected so whenever a Product with new Category is created which does not
+    // exist we are using cascade so that changes are reflected accordingly.
     @ManyToOne(cascade = {CascadeType.PERSIST} )
     private Category category;
 }

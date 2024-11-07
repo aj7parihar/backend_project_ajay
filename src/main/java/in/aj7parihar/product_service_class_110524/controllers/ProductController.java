@@ -7,6 +7,7 @@ import in.aj7parihar.product_service_class_110524.models.Product;
 import in.aj7parihar.product_service_class_110524.services.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/products")
 public class ProductController {
 
 
@@ -29,7 +31,7 @@ public class ProductController {
     }
 
     // Get single Product by ID
-    @GetMapping("/products/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<ProductResponseDTO> getProductDetails(@PathVariable ("id") Long productId) throws ProductNotFoundException {
         Product product = productService.getSingleProduct(productId);
         // Here ProductService is an Interface (or contract), now the reference to the object...
@@ -50,13 +52,33 @@ public class ProductController {
     }
 
     // Get all Products
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductResponseDTO>> getAllProductDetails(){
-        List<Product> product = productService.getAllProducts();
+//    @GetMapping()
+//    public ResponseEntity<List<ProductResponseDTO>> getAllProductDetails(){
+//        List<Product> product = productService.getAllProducts();
+//
+//        // We have got the details of all the products, now we will convert Product object to
+//        // ProductResponseDTO object
+//        List<ProductResponseDTO> productResponseDTOList = new ArrayList<>();
+//        for(Product product1 : product){
+//            productResponseDTOList.add(convertProductToProductResponseDTO(product1));
+//        }
+//        return new ResponseEntity<>(productResponseDTOList, HttpStatus.OK);
+//
+//    }
+
+    // Get all products using pagination
+    @GetMapping()
+    public ResponseEntity<List<ProductResponseDTO>> getAllProductDetails(
+            @RequestParam ("pageNumber") int pageNumber,
+            @RequestParam ("pageSize") int pageSize,
+            @RequestParam ("sortBy") String sortParam)
+    {
+        Page<Product> product = productService.getAllProducts(pageNumber, pageSize, sortParam);
 
         // We have got the details of all the products, now we will convert Product object to
         // ProductResponseDTO object
         List<ProductResponseDTO> productResponseDTOList = new ArrayList<>();
+
         for(Product product1 : product){
             productResponseDTOList.add(convertProductToProductResponseDTO(product1));
         }
@@ -65,7 +87,7 @@ public class ProductController {
     }
 
     // Add a new Product
-    @PostMapping("/products")
+    @PostMapping()
     public ResponseEntity<ProductResponseDTO> createNewProduct(@RequestBody ProductRequestDTO productRequestDTO){
         Product product =  productService.addProduct(
             productRequestDTO.getTitle(),
@@ -79,14 +101,14 @@ public class ProductController {
         return new ResponseEntity<>(productResponseDTO, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<ProductResponseDTO> deleteAProduct(@PathVariable ("id") Long productId) throws ProductNotFoundException {
         Product product = productService.deleteProduct(productId);
         ProductResponseDTO productResponseDTO = convertProductToProductResponseDTO(product);
         return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
     }
 
-    @PatchMapping("/products/{id}")
+    @PatchMapping("{id}")
     public ResponseEntity<ProductResponseDTO> updateAProduct(@PathVariable ("id") Long productId,
             @RequestBody ProductRequestDTO productRequestDTO) throws ProductNotFoundException {
         Product product = productService.updateProduct(
@@ -101,7 +123,7 @@ public class ProductController {
         return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<ProductResponseDTO> replaceAProduct(@PathVariable ("id") Long productId,
                                                              @RequestBody ProductRequestDTO productRequestDTO)
             throws ProductNotFoundException {

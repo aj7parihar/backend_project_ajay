@@ -1,0 +1,127 @@
+## Searching, Pagination, Sorting
+
+
+
+# Searching
+    - Searching is the most common functionality offered by any website/company.
+    - Search API works with two methods i.e. GET, POST
+
+    Good to know stuff:
+    In real production system we DO NOT perform DB search for serving queries.
+    And in case where the searching involves String with comparison (like operator) it is going to hamper the
+    performance.
+
+    Hence, in real production system we use something called "ElasticSearch" for serving search queries.
+    (We will learn more about this in HLD)
+
+    ElasticSearch:
+    - Uses Inverted Index concept.
+    - It's a s/w that makes search queries faster because of the way it stores the data.
+    - It's another NoSQL DB.
+
+    Coming back to Searching
+    So searching happens based on the request params/query params
+    and if we want to filter search request based on multiple conditions then it might be cumbersome to send
+    lots of query parameters in the search request.
+    - the URL length will increase which is not a good practice.
+
+    - For search based on query/request params we do GET call.
+    - And for search based on request body (key-value pair) we do POST call.
+
+    - Hence, in case, where we want to perform a search or search filtering based on lots of parameters
+        the good practice is to send these as Key-Value pair as a POST call.
+        - In this way the URL length will not increase
+        - the URL will not look cumbersome.
+
+    - But for business use case we should be able to share the URL
+        - and search params in request body with POST call is not sharable, as we can share the URL but
+            not the search params which is in the form request body.
+
+        - Hence, business started falling back towards the GET method with query params.
+            - Client/Browser started supporting bigger URL length.
+            - And also when sharing a link to someone using "share" option it does not copy the link
+                rather shortens the URL using URL Shortner.
+
+            - GET request --> response can be cached, we can have cached paged for responses.
+                - Business will prepare the cache response pages upfront based on their needs.
+
+                Caching:
+                - Stored in-memory (RAM).
+                - faster than DB since in-memory.
+                - backend will interact with Cache first and if the cache pages are not found then it will query DB.
+
+                NOTE: Both FE & BE will have a cache in this case we have discussed BE caching.
+
+    Conclusion:
+    Both GET and POST exist for Search depending on the business use case.
+
+
+
+
+# Pagination
+    - Any website will not send all the queried data at once, because
+        - for FE it will be too much of data.
+        - heavy response payload for BE, n/w and FE.
+        - the response will be slower (> response time).
+
+    - Hence we send small payloads from BE to FE so that it will be efficient for BE, n/w and FE.
+    - And this is called Pagination.
+    - Websites which supports pages will display results page by page and websites such as insta, linkedin,
+        f/b, etc. will have posts per page ( page is invisible) but the scroll is infinite.
+
+
+    Why Pagination?
+    - BE needs to query the entire search all at once.
+    - FE needs to process a big response payload.
+    - N/W - for slower internet heavy payload can be a problem.
+
+    - All search results might not be relevant, user might be interested in only top or few results.
+
+
+    Ways to achieve Pagination
+    - Set the number of elements to be displayed in 1 page (page size) using "limit"
+    - Set the total number of pages to be ignored using "offset" (a start point).
+
+    // Example:
+    limit = 10 (size of page)
+    and we want third page
+    then offset = 2 (that means ignore two pages before and get the 3rd page)
+
+
+    How to achieve Pagination
+    - JPA provides something out of the box something called "Pageable".
+    - So wherever we were returning "list", we will now return "Pageable" i.e. pages.
+
+    - Repository will have the Pagination code as it interacts with DB.
+
+    - So now Controller --> Service --> Repository will have to adapt according to Request/Query Param.
+
+    - Pagination arguments will be passed as a part of Query Parameters.
+
+
+    # Pageable
+        - It is an interface
+        -
+
+        # PageRequest
+            Arguments (int pageNumber, int pageSize) to repository methods from Service class cannot be
+            created directly as Pageable hence we will use PageRequest
+
+            - PageRequest is class that extends AbstractPageRequest
+            - And AbstractPageRequest implements <<Pageable>> & <<Serializable>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

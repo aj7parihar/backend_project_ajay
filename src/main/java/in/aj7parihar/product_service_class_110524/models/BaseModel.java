@@ -27,6 +27,11 @@ public class BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    /*
+        The Product object’s 'id' property is annotated with @Id so that JPA recognizes it as the object’s ID.
+        The 'id' property is also annotated with @GeneratedValue to indicate that the ID should be generated
+        automatically.
+     */
     private long id;
 
     @CreationTimestamp
@@ -34,5 +39,6 @@ public class BaseModel {
 
     @UpdateTimestamp
     private Date updatedAt;
+
     private boolean isDeleted = false;
 }

@@ -3,6 +3,7 @@ Class 11052024
 ## RestTemplate
     - It is a utility class in Spring f/w - provided by "spring-boot-starter-web"
         - public class RestTemplate extends InterceptingHttpAccessor implements RestOperations.
+
     - It is a SYNCHRONOUS HTTP Client hence thread safe.
     - Used for making HTTP request to external RESTful web services.
     - Used for making API (or HTTP requests) calls to 3rd party.

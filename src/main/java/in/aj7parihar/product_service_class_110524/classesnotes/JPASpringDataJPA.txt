@@ -1,0 +1,76 @@
+## Spring Data JPA
+
+
+# JPA
+    - It is an interface/API.
+
+    J - Java
+    P - Persistence
+    A - API
+
+
+    JPA Core Concepts:
+    - @Entity: Class annotated with @Entity represents a table in relational DB.
+    - EntityManager: Manages the lifecycle of entities, performing the CRUD operations.
+        - Spring Data JPA is an Entity Manager in Spring/Spring Boot applications.
+    - JPQL: Java Persistence Query Language, customer query to interact with entities from DB.
+
+    JPA Limitations:
+    - It is a low level API hence requires a lot of boilerplate code.
+    - We need to manually write queries to interact with entities from DB.
+
+
+
+# Spring Data JPA
+    - Spring Data JPA is part of larger Spring Data Family.
+    - It is an abstraction layer, built on top of JPA.
+    - Hence along with the features of JPA it provides its own additional features.
+
+    - Spring Data JPA uses JPA to manage data in a relational database.
+
+
+    Key Features:
+
+    Repositories:
+    - public interface ProductRepository extends JpaRepository<Product, Long>
+
+    - JpaRepository itself is an interface.
+
+    - And JpaRepository extends ListCrudRepository<T, ID>, ListPagingAndSortingRepository<T, ID>,
+        QueryByExampleExecutor<T>.
+
+    - It creates implementations of RepositoryInterface (ProductRepository in our case) automatically w/o
+        any concrete implementations at runtime, by using existing repository interfaces such as
+        JpaRepository, CrudRepository, and PagingAndSortingRepository.
+
+        - and performs all the CRUD operations w/o writing single line of query.
+
+
+    Derived or Declared Queries:
+    - Since it inherits different repository interfaces hence provides pre-defined methods
+        such as "findByName(String name)" which automatically generates SQL queries.
+
+
+    Custom Queries:
+    - We can define custom queries by using @Query annotation and JPQL.
+
+
+    Out-of-box features:
+    - Pagination in queries
+    - Sorting in queries
+    - Auditing (audit fields like created/modified timestamps)
+
+
+***
+    Conclusion:
+    - JPA is an interface/API which provides some contracts/guidelines.
+        - provides set of interfaces (JpaRepository, etc.) and annotations (like @Entity, etc.).
+
+    - Spring Data JPA uses JPA to manage relational DB.
+
+    - Since JPA is an interface it needs someone to implement it.
+
+    - Therefore ORM comes into picture.
+
+    - ORM is a technique/translator that implements JPA.
+***

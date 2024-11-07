@@ -2,6 +2,7 @@ package in.aj7parihar.product_service_class_110524.services;
 
 import in.aj7parihar.product_service_class_110524.exceptions.ProductNotFoundException;
 import in.aj7parihar.product_service_class_110524.models.Product;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -22,6 +23,9 @@ public interface ProductService {
 
     public List<Product> getAllProducts();
     // Why "public" modifier is redundant for interface members? (refer to point 3 in notes)
+
+    // fetching all products using Pagination & Sorting
+    Page<Product> getAllProducts(int pageNumber, int pageSize, String sortParam);
 
     public Product addProduct(
             String title,

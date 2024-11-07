@@ -1,0 +1,11 @@
+## FETCH
+
+package jakarta.persistence;
+
+public enum FetchType {
+    LAZY,
+    EAGER;
+
+    private FetchType() {
+    }
+}

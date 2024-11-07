@@ -1,0 +1,21 @@
+## CASCADE
+
+package jakarta.persistence;
+
+public enum CascadeType {
+    ALL,
+    PERSIST,
+    MERGE,
+    REMOVE,
+    REFRESH,
+    DETACH;
+
+    private CascadeType() {
+    }
+}
+
+
+--> Bidirectional Mapping
+    - In our project b/w Product & Category
+    - @ManyToOne --> Product class = Many Product to One Category.
+    - @OneToMany --> Category class = One Category to Many Product.

@@ -1,0 +1,185 @@
+## @Controller and @RestController
+
+
+@Component
+    - It is a class level annotation.
+
+    - During ComponentScanning (@ComponentScan), Spring f/w automatically detects the classes
+        annotated with @Component, and then
+        - marks a class as Spring Component.
+        - and register them as Spring BEANS in <<ApplicationContext>> or Spring IoC Container.
+
+    - Annotations like @Repository, @Service, @Controller, and @Configuration are specializations of @Component
+        annotation, and thus inherits its behavior along with their additional behaviors.
+
+    @Repository: Indicates that the class is a Data Access Object (DAO).
+    @Service: Indicates that the class holds the business logic.
+    @Controller: Indicates that the class serves as a controller in the MVC architecture.
+    @Configuration: Indicates that the class contains Spring BEANS definitions.
+
+
+
+-> What is a framework?
+   General Definition - Particular set of rules, ideas or beliefs, which we use to deal with
+   problems.
+
+   In Software - Similarly, a software framework is a structure or a template that has its own
+   set of rules using which we can build complex and broad projects that many people can use.
+
+   For Example, In Spring Boot Framework, we have @RestController Annotation, that in itself is
+   annotated with @Controller and @ResponseBody annotation, so it is a rule that is used to
+   create RESTFul web services, allowing us to handle HTTP requests and return responses in a format
+   such as JSON or XML.
+
+   Here's a breakdown of what @RestController does:
+   -> @Controller - is used to mark a class as a Spring MVC Controller.
+   -> @ResponseBody - indicates that the return value of a method should be written directly to the
+       HTTP response body, rather than to view resolver.
+   -> By using @RestController, we don't need to annotate each method with @ResponseBody.
+      It applies to all handler methods within the class.
+   -> Methods in a @RestController are mapped to HTTP requests using @RequestMapping or its variants
+      (@GetMapping, @PostMapping, @PutMapping, @DeleteMapping, etc.).
+      These methods can take parameters from the request (path variables, query parameters,
+      request bodies, etc.) and return data directly.
+
+
+
+@RestController
+    - It is an interface.
+    - Introduced with Spring 4.0
+    - It is a convenience annotation that is itself annotated with @Controller and @ResponseBody.
+
+    - It is an alias for @Controller annotation.
+        public @interface RestController {
+        	@AliasFor(annotation = Controller.class)
+        	String value() default "";
+
+        }
+
+    - It returns class (Java) objects instead of views.
+    - The object returned is automatically Serialized (using Jackson or JAXB) into JSON or XML, and
+        sent back as HTTP response.
+
+    // Example
+    @RestController
+    public class ApiController {
+
+        @GetMapping("/api/greeting")
+        public Greeting greeting() {
+            return new Greeting("Hello, World!");
+        }
+    }
+
+    - Above example returns a "Greeting" object.
+    - Spring automatically converts (using Jackson library) this object into JSON and sends it as a response.
+
+
+
+
+    @Controller
+        - It is an interface.
+        - It is a meta-annotation (additional) for @Component annotation
+
+        - It is an alias for @Component annotation
+          @Component
+          public @interface Controller {
+              @AliasFor(
+                  annotation = Component.class
+              )
+              String value() default "";
+          }
+
+        - It returns "views" (usually in the form of HTML) instead of just class (Java) object.
+        - Since it returns views, it means that it interacts with View Resolver/Templates such as JSP, Thymeleaf, etc.
+
+        // Example
+        @Controller
+        public class HomeController {
+
+            @RequestMapping("/home")
+            public String home(Model model) {
+                model.addAttribute("message", "Welcome to the Home Page!");
+                return "home"; // returns the name of the view (home.jsp or home.html)
+            }
+        }
+
+        - In above example it returns the name of the view to be rendered (home.jsp or home.html).
+
+
+
+    @ResponseBody
+        - It is an interface
+        - It is an annotation that indicates the return value of a method should be written directly to the
+            HTTP response body, rather than to view resolver.
+
+        - How @ResponseBody Works
+          When a method in a Spring controller is annotated with @ResponseBody,
+          Spring converts the returned object into a format suitable for the HTTP response.
+          This conversion is handled by message converters that are configured in the Spring framework.
+          For example, if we're returning a Java object, Spring will convert it into JSON or XML
+          using the appropriate converter (like Jackson for JSON).
+
+          // Example
+          @Controller
+          public class ApiController {
+
+              @RequestMapping("/api/user")
+              @ResponseBody
+              public User getUser() {
+                  return new User("John", "Doe");
+              }
+          }
+
+          - In this example:
+            - The getUser() method returns a User object.
+            - The @ResponseBody annotation tells Spring to convert this User object into JSON
+                (assuming Jackson is on the classpath) and writes it directly to the HTTP response body.
+
+
+        Without @ResponseBody:
+        - If @ResponseBody is not used, Spring will assume that the return value is the name of a view,
+            and it will try to resolve this view name using a view resolver.
+
+        //Example:
+        @Controller
+        public class ApiController {
+
+            @RequestMapping("/api/user")
+            public String getUser(Model model) {
+                model.addAttribute("user", new User("John", "Doe"));
+                return "userView";
+            }
+        }
+
+        - In this case, getUser() is expected to return a view named userView,
+            and the model object will contain the data to be displayed in that view.
+
+
+
+
+
+-> Both, @RestController and @Controller annotations are used to define a class as Controller class in Spring MVC.
+    - but both serves different purpose based on response we want.
+
+# KEY DIFFERENCES
+
+    Response Type:
+    @Controller: Returns a view (e.g., HTML).
+    @RestController: Returns data (e.g., JSON or XML).
+
+
+    Response Handling:
+    @Controller: Requires manual conversion of objects to the desired format using @ResponseBody or
+        using view templates.
+    @RestController: Automatically (assumes Jackson is on the classpath) serializes the returned object
+        to JSON or XML.
+
+
+    Usage:
+    @Controller: Used for web applications with views.
+    @RestController: Used for RESTful web services with response as JSON or XML.
+
+
+
+
+

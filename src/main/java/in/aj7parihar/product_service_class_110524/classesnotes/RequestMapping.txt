@@ -1,0 +1,139 @@
+## Spring @RequestMapping annotation
+
+-> Simply put, @RequestMapping annotation is used to map the incoming web requests to
+    specific handler methods in Spring MVC Controller class.
+
+-> public @interface RequestMapping, it is an interface.
+
+-> It is highly versatile (flexible) and can be used to define:
+    - URL patterns (which requests will be handled by which specific method).
+    - HTTP methods (GET, POST, etc.).
+    - Request parameters (optional query parameters).
+    - Headers (specific HTTP headers).
+    - Consumes and Produces (media types like JSON, XML).
+
+-> This annotation can be applied at both class level and method level.
+
+1. Class Level
+    - When applied at the class level it defines the base URL for all the handler methods inside Controller class.
+    // Example
+    @RestController
+    @RequestMapping ("/api/v1")
+    public class MyController{
+
+        @RequestMapping("/products")
+        public String getAllProducts(){
+            return "Returning all products";
+        }
+
+        @RequestMapping("/users")
+        public String getAllUsers(){
+            return "Returning all users";
+        }
+    }
+
+2. Method Level
+    - When applied at method level it defines specific endpoint for each handler method.
+    // Example
+    @RestController
+    public class MyController{
+
+        @RequestMapping("/api/v1/products")
+        public String getAllProducts(){
+            return "Returning all products";
+        }
+
+        @RequestMapping("/api/v1/users")
+        public String getAllUsers(){
+            return "Returning all users";
+        }
+    }
+
+3. Combination of both class and method level
+    - Base URL at the class level and specific endpoint at the method level
+        // Example
+        @RestController
+        @RequestMapping ("/api/v1")
+        public class MyController{
+
+            @RequestMapping("/products/{id}")
+            public String getProductById(@PathVariable ("id") int productId){
+                return "Returning all products";
+            }
+
+            @RequestMapping("/users/{id}")
+            public String getUserById(@PathVariable ("id") int userId){
+                return "Returning all users";
+            }
+        }
+
+
+
+# Attributes of @RequestMapping
+1. value or path: like the path parameters
+    - @RequestMapping("/home") maps to /home
+
+2. methods: handling the request based on specific HTTP method
+    - @RequestMapping(value = "/save", method = RequestMethod.POST) responds only to POST requests.
+
+3. request parameters: points the web request based on the request/query params
+    - @RequestMapping(value = "/home", params = "type=admin") handles requests with a type parameter set to admin.
+
+4. headers: restricts the incoming web request based on the headers defined
+    - @RequestMapping(value = "/json", headers = "content-type=application/json")
+        restricts requests to those with a Content-Type of application/json.
+
+5. consumes: media type the method accepts
+    - @RequestMapping(value or path = "/upload", method = RequestMethod.POST, consumes = "application/json")
+
+6. produces: media type the method returns
+    - @RequestMapping(value = "/user", method = RequestMethod.POST, produces = "application/json")
+
+
+7. PathVariable: We can capture the path/context parameters using @PathVariable
+    - @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+    public String getUserById(@PathVariable ("id") int userId){
+        return "Returning user with id: " + userId;
+    }
+
+    // Multiple PathVariable
+    @RequestMapping(value = "/ex/foos/{fooid}/bar/{barid}", method = GET)
+    @ResponseBody
+    public String getFoosBySimplePathWithPathVariables
+      (@PathVariable ("fooid)" long fooId, @PathVariable ("barid") long barId) {
+        return "Get a specific Bar with id=" + barId +
+          " from a Foo with id=" + fooId;
+    }
+
+8. RequestParameters: We can capture the query parameters using @RequestParam
+    - @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String search(@RequestParam("q") String query){
+        return "Searching for: " + query
+    }
+
+    // A request to "/search?q=spring" would invoke this method with query = spring.
+
+9. RequestBody: We can capture the request body for POST, PUT & PATCH http methods using @RequestBody
+    - @RequestMapping(value = "/users", method = RequestMethod.POST)
+    public String createUser(@RequestBody RequestDto requestDto){
+        return "User created: " + requestDto.getName();
+    }
+
+
+# Simplified/Shorthand @RequestMapping Annotations
+    - Introduced with Spring 4.3
+    - Improves readability
+    - Reduces verbosity of the code, matlab reduces text in code.
+    - A more concise way to map web requests to specific method
+
+    @GetMapping("/path") for @RequestMapping(value = "/path", method = RequestMethod.GET).
+    @PostMapping("/path") for @RequestMapping(value = "/path", method = RequestMethod.POST).
+    @PutMapping("/path") for @RequestMapping(value = "/path", method = RequestMethod.PUT).
+    @DeleteMapping("/path") for @RequestMapping(value = "/path", method = RequestMethod.DELETE).
+    @PatchMapping("/path") for @RequestMapping(value = "/path", method = RequestMethod.PATCH).
+
+
+--> Annotation for mapping web requests onto methods in request-handling classes with flexible method signatures.
+    Both Spring MVC and Spring WebFlux support this annotation through a
+    RequestMappingHandlerMapping and RequestMappingHandlerAdapter
+    in their respective modules and package structures.

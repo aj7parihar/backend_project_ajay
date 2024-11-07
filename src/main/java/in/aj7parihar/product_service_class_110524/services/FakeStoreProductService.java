@@ -3,6 +3,7 @@ package in.aj7parihar.product_service_class_110524.services;
 import in.aj7parihar.product_service_class_110524.dtos.FakeStoreDTO;
 import in.aj7parihar.product_service_class_110524.exceptions.ProductNotFoundException;
 import in.aj7parihar.product_service_class_110524.models.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -100,6 +101,11 @@ public class FakeStoreProductService implements ProductService {
             products.add(fakeStoreDTO.toProduct());
         }
         return products;
+    }
+
+    // get all products using pagination
+    public Page<Product> getAllProducts(int pageNumber, int pageSize, String sortParam) {
+        return null;
     }
 
     @Override

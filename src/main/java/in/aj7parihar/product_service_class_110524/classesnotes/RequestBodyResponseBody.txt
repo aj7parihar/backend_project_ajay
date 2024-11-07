@@ -1,0 +1,66 @@
+## @RequestBody and @ResponseBody annotations
+    - These annotations are used to map HTTP request bodies to Java objects and Java objects to response bodies.
+
+
+
+@RequestBody
+    - It is an interface.
+    - It is used to convert the HTTP request body to a requestDto or Java objects.
+
+    Working:
+        - A request is made with a JSON payload, Spring will automatically deserialize the JSON into the
+            specified Java object (or requestDto) using the HttpMessageConverter mechanism
+            (usually MappingJackson2HttpMessageConverter for JSON).
+
+        - The object can then be used within our controller method.
+
+
+
+@ResponseBody
+    - It is an interface.
+    - It is an annotation that indicates the return value of a method should be written directly to the
+        HTTP response body, rather than to view resolver.
+
+    How @ResponseBody Works
+      - When a method in a Spring Controller is annotated with @ResponseBody,
+        Spring converts the returned object into a format suitable for the HTTP response.
+
+      - This conversion is handled by message converters that are configured in the Spring framework.
+
+      - For example, if we're returning a Java object, Spring will convert it into JSON or XML
+        using the appropriate converter (like Jackson for JSON).
+
+      // Example
+      @Controller
+      public class ApiController {
+
+          @RequestMapping("/api/user")
+          @ResponseBody
+          public User getUser() {
+              return new User("John", "Doe");
+          }
+      }
+
+      - In this example:
+        - The getUser() method returns a User object.
+        - The @ResponseBody annotation tells Spring to convert this User object into JSON
+            (assuming Jackson is on the classpath) and writes it directly to the HTTP response body.
+
+
+    Without @ResponseBody:
+    - If @ResponseBody is not used, Spring will assume that the return value is the name of a view,
+        and it will try to resolve this view name using a view resolver.
+
+    //Example:
+    @Controller
+    public class ApiController {
+
+        @RequestMapping("/api/user")
+        public String getUser(Model model) {
+            model.addAttribute("user", new User("John", "Doe"));
+            return "userView";
+        }
+    }
+
+    - In this case, getUser() is expected to return a view named userView,
+        and the model object will contain the data to be displayed in that view.

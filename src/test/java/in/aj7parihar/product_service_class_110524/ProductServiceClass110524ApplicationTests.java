@@ -22,7 +22,7 @@ class ProductServiceClass110524ApplicationTests {
     // There are three ways of Dependency Injection
     // 1. DI through Constructors --> As we have done in our code
     // 2. DI using setters method, learn this
-    // 3. Autowired --> Not recommended --> We do not have to anything, it used advanced concepts like
+    // 3. Autowired --> Not recommended --> We do not have to do anything, it uses advanced concepts like
     // reflection, etc. behind the scene.
 
     @Autowired

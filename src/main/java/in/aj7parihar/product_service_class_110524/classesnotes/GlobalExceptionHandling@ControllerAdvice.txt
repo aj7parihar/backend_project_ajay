@@ -45,7 +45,7 @@ Class 140502024
 
 # Solution 3: @ControllerAdvice
     - Introduced with Spring 3.2
-    - Provides a unified and global exception handling using
+    - Provides a unified and global way of handling the exceptions using
         @ExceptionHandler with the @ControllerAdvice annotation.
 
     Benefits:
@@ -76,7 +76,7 @@ Class 140502024
 
 
 ***
-    we can combine and implement a @ControllerAdvice globally but also ResponseStatusExceptions locally.
+    we can combine and implement @ControllerAdvice globally but also ResponseStatusExceptions locally.
 ***
 
 
@@ -93,6 +93,7 @@ Class 140502024
     - Applies to multiple controllers (like ProductController, CategoryController in our case).
     - It can be used to handle exceptions across the entire application.
     - Or can handle exceptions related to specific controllers or packages.
+    - A Spring annotation used to define a global exception handler.
 
 --> Sits b/w Client and Multiple Controllers.
 
@@ -130,7 +131,7 @@ Class 140502024
 
 
     b. Binding Global Request Data
-    - We can use @ModelAttribute in a @ControllerAdvice class to bind certain attributes to the model.
+    - We can use @ModelAttribute in a @ControllerAdvice class to add attributes to the model.
         // Example:
         @ControllerAdvice
         public class GlobalModelAttributeAdvice {
@@ -140,3 +141,8 @@ Class 140502024
                 model.addAttribute("projectName", "My Project");
             }
         }
+
+    - This adds a projectName attribute to the model for every request handled by your controllers.
+
+
+

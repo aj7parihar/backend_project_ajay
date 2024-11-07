@@ -1,23 +1,64 @@
-Class - 07052024, 09052024, 11052024, 14052024
+Class - All classes
+
 
 
 # @Getters, @Setters & Lombok
     - Accessing any attribute from outside is not possible as they are private hence we have @Getters and @Setters.
     - 'lombok' package automatically takes care of generating getter and setters.
+    - Lombok: Java annotation library which helps to reduce boilerplate code.
     - We can also generate them manually.
     - Getters and Setters methods are public hence it becomes easy to set a value or get a value
         of any attribute from outside.
 
--> @ControllerAdvice:
-   A Spring annotation used to define a global exception handler.
 
 
-@RestController, @Controller
-@RequestMapping, @GetMapping, @PostMapping, @PutMapping, @PatchMapping, @DeleteMapping
-@PathVariable
+
+
+# @SpringBootApplication
+    - Spring Initializr adds the @SpringBootApplication annotation to our main class.
+    - Is a convenience annotation that adds all the following:
+
+    @Configuration: Tags the class as a source of bean definitions for the application context.
+
+    @EnableAutoConfiguration: Tells Spring Boot to start adding beans based on classpath settings,
+        other beans, and various property settings. For example, if spring-webmvc is on the classpath,
+        this annotation flags the application as a web application and activates key behaviors,
+        such as setting up a DispatcherServlet.
+
+    @ComponentScan: Tells Spring to look for other components, configurations, and services in the
+        com/example package, letting it find the controllers.
+
+
+
+# @MappedSuperClass annotation
+    - It is an interface
+    - It belongs to "jakarta.persistence" package
+    - Tell the ORM/Hibernate that is a Super Class, and all related entities should inherit its attributes
+        and behaviors.
+
+    - Not a standalone entity.
+    - Does not have a table mapping in DB.
+    - It's attributes are mapped in the tables of subclasses.
+    - Used to define commonly used fields such as id, createdAt, updatedAt, isDeleted, etc, shared by multiple
+        entities.
+
+
+# What is Actuator in Spring Boot?
+    - When we create methods in Controller and map them to HTTP requests then these mapping can be
+        seen in the Actuator tab.
+
+    - Actuator provides the information about Mappings, Beans, Health, etc.
+
+
+
+
+
 
 @ResponseStatus
 
 @Id
 @GeneratedValue (strategy = GenerationType.INDENTITY)
+
+
+
 

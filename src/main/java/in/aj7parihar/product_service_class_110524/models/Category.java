@@ -28,6 +28,7 @@ public class Category extends BaseModel {
     // hence we will have to explicitly tell ORM that the products here
     // mapped to category keyword in Products table and do not create a new
     // table for this.
+
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)  //, fetch = FetchType.LAZY)
     // By default, fetch = FetchType.LAZY, no need to define explicitly
     // fetch = FetchType.EAGER //need to define explicitly
